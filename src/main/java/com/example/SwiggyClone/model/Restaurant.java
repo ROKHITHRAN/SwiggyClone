@@ -1,8 +1,11 @@
 package com.example.SwiggyClone.model;
 
+import java.util.List;
+
 import com.example.SwiggyClone.enums.FoodType;
 import com.example.SwiggyClone.enums.RestaurantStatus;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -43,9 +46,10 @@ public class Restaurant {
     @Column(name="food_type")
     private FoodType foodType;
 
-    //mappedby for orders;
-    //  TODO Adding the reverse for the food items; 
-    // @OneToMany
-    // mappedby() for foodItems;
+    @OneToMany(mappedBy = "restaurant",cascade = CascadeType.ALL)
+    private List<Orders>orders;
+
+    @OneToMany(mappedBy = "restaurant",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<FoodItems>foodItems;
 
 }

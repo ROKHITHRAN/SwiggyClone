@@ -2,13 +2,8 @@ package com.example.SwiggyClone.model;
 
 import java.util.List;
 
-import com.example.SwiggyClone.enums.OrderStatus;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,39 +15,27 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
-public class Orders {
-  
+public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long orderId;
+    private Long cartId;
 
-    private Double amount;
-
-    @Enumerated(EnumType.STRING)
-    private OrderStatus orderStatus;
-
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name="restaurant_id")
     private Restaurant restaurant;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name="customer_id")
     private Customer customer;
 
-    @ManyToOne
-    @JoinColumn(name="delivery_id",nullable = true)
-    private Delivery delivery;
-
-    @OneToMany(mappedBy = "orders",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "cart",cascade = CascadeType.ALL)
     private List<OrderItems>orderItems;
 
-    @OneToOne
-    @JoinColumn(name="payment_id")
-    private Payment payment;
+    private Double amount;
+
     
 }

@@ -1,5 +1,7 @@
 package com.example.SwiggyClone.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,7 +17,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name="Address")
+@Table(name="address")
 public class Address {
 
     @Id
@@ -38,6 +40,7 @@ public class Address {
     }
 
     @OneToOne
+    @JsonBackReference
     @JoinColumn(name="user_id")
     private User user;
 }

@@ -1,7 +1,11 @@
 package com.example.SwiggyClone.model;
 
+import java.util.List;
+
+import com.example.SwiggyClone.enums.FoodCategory;
 import com.example.SwiggyClone.enums.FoodType;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -10,6 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -41,7 +46,10 @@ public class FoodItems {
     @JoinColumn(name="restaurant_id")
     private Restaurant restaurant;
 
+    @OneToMany(mappedBy = "foodItems")
+    private List<OrderItems>OrderItems;
 
-
+    @Enumerated(EnumType.STRING)
+    private FoodCategory foodCategory;
     
 }

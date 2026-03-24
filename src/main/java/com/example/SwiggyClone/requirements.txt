@@ -1,0 +1,38 @@
+Endpoints
+
+Auth
+1.post             auth/register/customer
+2.post             auth/register/delivery
+3.post             auth/register/restaurant
+4.post             auth/login
+
+Customer
+1.Get               customer/details/{id}
+2.put               customer/details/{id}
+3.Post              customer/payment/{id}
+4.Get               customer/active-orders/{cust-id}
+5.Get               customer/history-orders/{cust-id}
+6.Post              customer/restaurant-review/{rest-id}
+6.Post              customer/Delivery-review/{delivery-id}
+
+Restaurant
+1.Get               Restaurant/details/{rest-id}
+2.Get               Restaurant/details
+3.Get               Restaurant/Filter/{****}
+4.post              Restaurant/food/add
+5.put               Restaurant/food/edit
+6.Delete            Restaurant/food/{rest-id}
+7.Get               Restaurant/active-orders/{rest-id}
+8.Get               Restaurant/history-orders/{rest-id}
+9.Put               Restaurant/orders/{order-id}/status        
+
+Cart
+1.Post              Cart/Item/{customerId}
+2.Put               Cart/Item/{customerId}
+3.Post              Cart/Checkout/{customerId}
+4.Delete            Cart/Item/{customerId}
+
+Delivery
+1.Get               Delivery/all-active-orders
+2.Get               Delivery/active-orders/{delivery-id}
+3.put               Delivery/order/{order-id}/status
