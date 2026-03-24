@@ -1,13 +1,15 @@
 package com.example.SwiggyClone.model;
 
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
+import com.example.SwiggyClone.enums.Role;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import lombok.Getter;
@@ -37,4 +39,7 @@ public class User {
     @OneToOne(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
     @JsonManagedReference
     private Images images;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 }

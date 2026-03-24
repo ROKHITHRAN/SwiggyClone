@@ -2,8 +2,6 @@ package com.example.SwiggyClone.model;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -35,7 +33,6 @@ public class Customer {
     private int ratings;
 
     @OneToMany(mappedBy = "customer")
-    @JsonBackReference
     private List<Orders>orders;
 
     public Customer(Long userId, boolean isSubscribed, int points, int ratings) {

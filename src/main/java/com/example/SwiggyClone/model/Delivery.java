@@ -3,9 +3,6 @@ package com.example.SwiggyClone.model;
 import java.sql.Blob;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -35,7 +32,6 @@ public class Delivery {
     private int ratings;
 
     @OneToMany(mappedBy="delivery")
-     @JsonBackReference
     private List<Orders>orders;
 
     public Delivery(Long userId, Blob currentLoc, int points, int ratings) {
