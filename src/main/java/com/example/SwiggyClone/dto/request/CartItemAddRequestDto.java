@@ -5,14 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderItemDto {
-    
+public class CartItemAddRequestDto {
     private Long foodItemId;
-    private String foodName;
     private int quantity;
+    private Long restaurantId;
 }

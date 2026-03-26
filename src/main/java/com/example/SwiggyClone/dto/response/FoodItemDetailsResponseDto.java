@@ -13,6 +13,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FoodItemDetailsResponseDto {
+    private Long foodId;
+
     private String foodName;
 
     private int ratings;

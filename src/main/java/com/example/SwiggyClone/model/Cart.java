@@ -33,7 +33,7 @@ public class Cart {
     private Customer customer;
 
     @OneToMany(mappedBy = "cart",cascade = CascadeType.ALL)
-    private List<OrderItems>orderItems;
+    private List<CartItems>cartItems;
 
     private Double amount;
 

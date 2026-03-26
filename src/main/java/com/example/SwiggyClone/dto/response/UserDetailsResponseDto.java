@@ -14,6 +14,7 @@ import lombok.Setter;
 public class UserDetailsResponseDto {
 
     // Common User fields
+    private Long userId;
     private String name;
     private String email;
     private String phoneNumber;

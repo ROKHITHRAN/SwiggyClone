@@ -11,5 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CartUpdateRequestDto {
     private Long cartId;
+    private Long foodItemId;
     private int quantity;
 }
