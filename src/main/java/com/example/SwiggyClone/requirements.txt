@@ -31,8 +31,12 @@ Cart
 2.Put               Cart/Item/{customerId}
 3.Post              Cart/Checkout/{customerId}
 4.Delete            Cart/Item/{customerId}
+3.Get               Cart/{cartId}
 
 Delivery
 1.Get               Delivery/all-active-orders
 2.Get               Delivery/active-orders/{delivery-id}
 3.put               Delivery/order/{order-id}/status
+
+FoodItem
+1.Get               foodItem/{foodId}
