@@ -1,4 +1,4 @@
-package com.example.SwiggyClone.service;
+package com.example.SwiggyClone.service.application_service;
 
 import com.example.SwiggyClone.dto.response.UserDetailsResponseDto;
 

@@ -15,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -51,5 +52,7 @@ public class FoodItems {
 
     @Enumerated(EnumType.STRING)
     private FoodCategory foodCategory;
+    
+    private String imageUrl;
     
 }

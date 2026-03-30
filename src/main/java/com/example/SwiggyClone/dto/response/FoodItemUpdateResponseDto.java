@@ -1,4 +1,5 @@
-package com.example.SwiggyClone.dto.request;
+package com.example.SwiggyClone.dto.response;
+
 
 import com.example.SwiggyClone.enums.FoodCategory;
 import com.example.SwiggyClone.enums.FoodType;
@@ -12,7 +13,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class FoodItemUpdateRequestDto {
+public class FoodItemUpdateResponseDto {
     private Long foodItemId;
     
     private String foodName;

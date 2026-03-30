@@ -8,7 +8,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.Getter;
@@ -32,10 +31,18 @@ public class Cart {
     @JoinColumn(name="customer_id")
     private Customer customer;
 
-    @OneToMany(mappedBy = "cart",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "cart",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItems>cartItems;
 
     private Double amount;
 
-    
+    public void addCartItem(CartItems cartItem) {
+        cartItems.add(cartItem);
+        cartItem.setCart(this);
+    }
+
+    public void removeCartItem(CartItems cartItem) {
+        cartItems.remove(cartItem);
+        cartItem.setCart(null);
+    }
 }

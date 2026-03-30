@@ -2,6 +2,7 @@ package com.example.SwiggyClone.model;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -34,6 +35,9 @@ public class Customer {
 
     @OneToMany(mappedBy = "customer")
     private List<Orders>orders;
+
+    @OneToOne(mappedBy="customer",cascade = CascadeType.ALL)
+    private Cart cart;
 
     public Customer(Long userId, boolean isSubscribed, int points, int ratings) {
         this.userId = userId;

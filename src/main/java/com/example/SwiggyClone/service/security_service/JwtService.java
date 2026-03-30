@@ -1,4 +1,4 @@
-package com.example.SwiggyClone.service;
+package com.example.SwiggyClone.service.security_service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

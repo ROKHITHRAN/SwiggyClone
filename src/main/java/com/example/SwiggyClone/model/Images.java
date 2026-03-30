@@ -28,10 +28,6 @@ public class Images {
     @OneToOne
     @JoinColumn(name="user_id")
     private User user;
-
-    @ManyToOne
-    @JoinColumn(name="food_id")
-    private FoodItems foodItems;
 }
     
  

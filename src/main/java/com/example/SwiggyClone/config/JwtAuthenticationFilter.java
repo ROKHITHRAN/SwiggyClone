@@ -1,7 +1,7 @@
 package com.example.SwiggyClone.config;
 
-import com.example.SwiggyClone.service.CustomUserDetailsService;
-import com.example.SwiggyClone.service.JwtService;
+import com.example.SwiggyClone.service.security_service.CustomUserDetailsService;
+import com.example.SwiggyClone.service.security_service.JwtService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

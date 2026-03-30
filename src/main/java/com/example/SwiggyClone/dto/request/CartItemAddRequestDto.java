@@ -13,4 +13,5 @@ public class CartItemAddRequestDto {
     private Long foodItemId;
     private int quantity;
     private Long restaurantId;
+    private Long customerId;
 }

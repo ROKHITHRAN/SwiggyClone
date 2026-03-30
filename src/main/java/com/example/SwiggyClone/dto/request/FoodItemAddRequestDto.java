@@ -1,5 +1,6 @@
 package com.example.SwiggyClone.dto.request;
 
+import com.example.SwiggyClone.enums.FoodCategory;
 import com.example.SwiggyClone.enums.FoodType;
 
 import lombok.AllArgsConstructor;
@@ -24,6 +25,8 @@ public class FoodItemAddRequestDto {
     private String descriptions;
 
     private FoodType foodType;
+
+    private FoodCategory foodCategory;
 
     private Boolean isAvailable;
 

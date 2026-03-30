@@ -54,5 +54,10 @@ public class Orders {
     @OneToOne
     @JoinColumn(name="payment_id")
     private Payment payment;
+
+    public void addOrderItem(OrderItems orderItem) {
+        orderItems.add(orderItem);
+        orderItem.setOrders(this);
+    }
     
 }

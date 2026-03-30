@@ -13,7 +13,13 @@ import lombok.Setter;
 @NoArgsConstructor
 public class OrderAddRequestDto {
     
-    private List<OrderItemDto> orderItems;
+    private List<OrderItemDto> cartItems;
 
     private Double amount;
+
+    private Long restaurantId;
+
+    private Long customerId;
+
+    private Long paymentId;
 }
