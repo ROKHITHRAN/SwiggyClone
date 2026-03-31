@@ -10,7 +10,7 @@ import com.example.SwiggyClone.model.FoodItems;
 
 public interface FoodItemsService {
     
-    public FoodItems addFoodItem(FoodItemAddRequestDto foodItem);
+    public FoodItemDetailsResponseDto addFoodItem(FoodItemAddRequestDto foodItem);
 
     public List<FoodItemDetailsResponseDto> getFoodItems(Long restaurantId);
 

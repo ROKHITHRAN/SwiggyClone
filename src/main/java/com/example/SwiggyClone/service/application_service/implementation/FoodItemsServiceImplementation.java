@@ -27,7 +27,7 @@ public class FoodItemsServiceImplementation implements FoodItemsService {
     private RestaurantRepository restaurantRepository;
     @Transactional
     @Override
-    public FoodItems addFoodItem(FoodItemAddRequestDto foodItem)
+    public FoodItemDetailsResponseDto addFoodItem(FoodItemAddRequestDto foodItem)
     {
 
         Restaurant restaurant=restaurantRepository.findById(foodItem.getRestaurantId()).orElseThrow(()->
@@ -43,7 +43,8 @@ public class FoodItemsServiceImplementation implements FoodItemsService {
         newFoodItem.setRatings(0);
         newFoodItem.setImageUrl(foodItem.getImageUrl());
 
-        return foodItemRepository.save(newFoodItem);
+        FoodItems saved = foodItemRepository.save(newFoodItem);
+        return getFoodItemById(saved.getFoodId());
     }
 
     public List<FoodItemDetailsResponseDto> getFoodItems(Long restaurantId)
