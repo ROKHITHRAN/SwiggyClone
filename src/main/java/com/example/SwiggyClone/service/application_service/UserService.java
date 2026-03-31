@@ -1,11 +1,12 @@
 package com.example.SwiggyClone.service.application_service;
 
+import com.example.SwiggyClone.dto.request.UserDetailsEditRequestDto;
 import com.example.SwiggyClone.dto.response.UserDetailsResponseDto;
 
 public interface UserService {
     
     //User details
-    public UserDetailsResponseDto getUserDetils(Long userId); 
+    public UserDetailsResponseDto getUserDetils(String email); 
 
-    public UserDetailsResponseDto editUserDetails(Long userId);
+    public UserDetailsResponseDto editUserDetails(UserDetailsEditRequestDto userDetails);
 }

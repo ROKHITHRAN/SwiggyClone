@@ -1,4 +1,5 @@
-package com.example.SwiggyClone.dto.request;
+package com.example.SwiggyClone.dto.response;
+
 import com.example.SwiggyClone.enums.OrderStatus;
 
 import lombok.AllArgsConstructor;
@@ -8,9 +9,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class OrderStatusUpdateRequestDto {
+@NoArgsConstructor
+public class OrderStatusResponseDto {
     private Long orderId;
     private OrderStatus orderStatus;
 }

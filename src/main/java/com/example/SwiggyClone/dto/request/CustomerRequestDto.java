@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CustomerRequestDto {
-    private int points;
-    private int ratings;
-    private boolean isSubscribed;
+    private Integer points;
+    private Integer ratings;
+    private Boolean isSubscribed;
 }

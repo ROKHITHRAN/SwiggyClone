@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.example.SwiggyClone.dto.request.OrderStatusUpdateRequestDto;
 import com.example.SwiggyClone.dto.response.OrderResponseDto;
+import com.example.SwiggyClone.dto.response.OrderStatusResponseDto;
 
 public interface OrderService {
     
@@ -15,5 +16,5 @@ public interface OrderService {
     public List<OrderResponseDto> getRestaurantOrderHistory(Long restaurantId);
     public List<OrderResponseDto> getDeliveryOrderHistory(Long deliveryId);
 
-    public OrderStatusUpdateRequestDto updateOrderStatus(OrderStatusUpdateRequestDto orderStatus);
+    public OrderStatusResponseDto updateOrderStatus(OrderStatusUpdateRequestDto orderStatus);
 }

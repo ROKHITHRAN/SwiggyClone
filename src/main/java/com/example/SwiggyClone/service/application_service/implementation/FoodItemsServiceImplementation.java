@@ -83,6 +83,7 @@ public class FoodItemsServiceImplementation implements FoodItemsService {
         return dto;
     }
 
+    @Transactional
     public FoodItemUpdateResponseDto updateFoodItem(FoodItemUpdateRequestDto foodItemDto)
     {
          FoodItems item=foodItemRepository.findById(foodItemDto.getFoodItemId()).orElseThrow(()->

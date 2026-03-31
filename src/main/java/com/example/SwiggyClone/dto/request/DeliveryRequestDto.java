@@ -14,8 +14,8 @@ import lombok.Setter;
 public class DeliveryRequestDto {
      private Blob currentLoc;
 
-    private int points;
+    private Integer points;
 
-    private int ratings;
+    private Integer ratings;
 
 }

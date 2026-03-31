@@ -13,6 +13,6 @@ import com.example.SwiggyClone.model.FoodItems;
 @Repository
 public interface FoodItemRepository extends JpaRepository<FoodItems,Long>{
     
-    @Query("select f from FoodItem where f.restaurantId = :restaurantId")
+    @Query("select f from FoodItem f where f.restaurantId = :restaurantId")
     Optional<List<FoodItems>>getFoodItemByRestaurantId(@Param("restaurantId") Long restaurantId);
 }
