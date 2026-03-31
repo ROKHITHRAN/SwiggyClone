@@ -6,7 +6,7 @@ import com.example.SwiggyClone.dto.response.UserDetailsResponseDto;
 public interface UserService {
     
     //User details
-    public UserDetailsResponseDto getUserDetils(String email); 
+    public UserDetailsResponseDto getUserDetails(String email); 
 
     public UserDetailsResponseDto editUserDetails(UserDetailsEditRequestDto userDetails);
 }

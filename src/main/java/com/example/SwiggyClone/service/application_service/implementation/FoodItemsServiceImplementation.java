@@ -18,9 +18,11 @@ import com.example.SwiggyClone.service.application_service.FoodItemsService;
 
 
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 
 
 @Service
+@AllArgsConstructor
 public class FoodItemsServiceImplementation implements FoodItemsService {
 
     private FoodItemRepository foodItemRepository;

@@ -14,6 +14,12 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.NOT_FOUND)
                 .body(ex.getMessage());
     }
+    @ExceptionHandler(DuplicateEntityException.class)
+    public ResponseEntity<?> handleDuplicateEntity(DuplicateEntityException ex) {
+        return ResponseEntity
+                .status(HttpStatus.IM_USED)
+                .body(ex.getMessage());
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleGeneric(Exception ex) {

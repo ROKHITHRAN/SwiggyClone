@@ -17,8 +17,10 @@ import com.example.SwiggyClone.repository.OrderRepository;
 import com.example.SwiggyClone.service.application_service.OrderService;
 
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 
 @Service
+@AllArgsConstructor
 public class OrderServiceImplementation implements OrderService {
 
     private OrderRepository orderRepository;

@@ -22,10 +22,12 @@ import com.example.SwiggyClone.repository.UserRepository;
 import com.example.SwiggyClone.service.application_service.UserService;
 
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 
 import com.example.SwiggyClone.exception.ResourceNotFoundException;
 
 @Service
+@AllArgsConstructor
 public class UserServiceImplementation implements UserService
 {
     private UserRepository userRepository;
@@ -33,7 +35,7 @@ public class UserServiceImplementation implements UserService
     private RestaurantRepository restaurantRepository;
     private DeliveryRepository deliveryRepository;
 
-    public UserDetailsResponseDto getUserDetils(String email)
+    public UserDetailsResponseDto getUserDetails(String email)
     {
         User user = userRepository.findByEmail(email).orElseThrow(()-> 
         new ResourceNotFoundException("User not found"));
@@ -200,6 +202,6 @@ public class UserServiceImplementation implements UserService
                 break;
         }
 
-        return getUserDetils(user.getEmail());
+        return getUserDetails(user.getEmail());
     }
 }

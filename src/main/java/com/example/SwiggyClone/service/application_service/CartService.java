@@ -6,7 +6,6 @@ import com.example.SwiggyClone.dto.request.OrderAddRequestDto;
 import com.example.SwiggyClone.dto.response.CartDetailsResponseDto;
 import com.example.SwiggyClone.dto.response.OrderResponseDto;
 
-
 public interface CartService {
     
     public CartDetailsResponseDto addItemToCart(CartItemAddRequestDto item);
