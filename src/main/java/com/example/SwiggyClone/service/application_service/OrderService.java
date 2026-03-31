@@ -17,4 +17,6 @@ public interface OrderService {
     public List<OrderResponseDto> getDeliveryOrderHistory(Long deliveryId);
 
     public OrderStatusResponseDto updateOrderStatus(OrderStatusUpdateRequestDto orderStatus);
+
+    public OrderResponseDto getOrderByOrderId(Long orderId);
 }

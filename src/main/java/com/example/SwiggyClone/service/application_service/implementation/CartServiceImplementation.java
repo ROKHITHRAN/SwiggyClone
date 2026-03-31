@@ -10,6 +10,7 @@ import com.example.SwiggyClone.dto.request.CartUpdateRequestDto;
 import com.example.SwiggyClone.dto.request.OrderAddRequestDto;
 import com.example.SwiggyClone.dto.request.OrderItemDto;
 import com.example.SwiggyClone.dto.response.CartDetailsResponseDto;
+import com.example.SwiggyClone.dto.response.OrderResponseDto;
 import com.example.SwiggyClone.enums.OrderStatus;
 import com.example.SwiggyClone.exception.ResourceNotFoundException;
 import com.example.SwiggyClone.model.Cart;
@@ -27,7 +28,7 @@ import com.example.SwiggyClone.repository.OrderRepository;
 import com.example.SwiggyClone.repository.PaymentRepository;
 import com.example.SwiggyClone.repository.RestaurantRepository;
 import com.example.SwiggyClone.service.application_service.CartService;
-
+import com.example.SwiggyClone.service.application_service.OrderService;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -43,10 +44,10 @@ public class CartServiceImplementation implements CartService{
     private CustomerRepository customerRepository;
     private PaymentRepository paymentRepository;
     private OrderRepository orderRepository;
-    
+    private OrderService orderService;
     @Transactional
     @Override
-    public Cart addItemToCart(CartItemAddRequestDto item)
+    public CartDetailsResponseDto addItemToCart(CartItemAddRequestDto item)
     {
 
         Cart cart=new Cart();
@@ -72,12 +73,14 @@ public class CartServiceImplementation implements CartService{
         cart.addCartItem(cart_items);
         
         customer.setCart(cart);
-        return cartRepository.save(cart);
+        cartRepository.save(cart);
+
+        return getCartDetails(cart.getCustomer().getUserId());
     }
 
     @Transactional
     @Override
-    public Cart updateCartItem(CartUpdateRequestDto item)
+    public CartDetailsResponseDto updateCartItem(CartUpdateRequestDto item)
     {
 
         Cart cart=cartRepository.findById(item.getCartId()).orElseThrow(()->
@@ -98,7 +101,7 @@ public class CartServiceImplementation implements CartService{
                 }
 
                 it.setQuantity(item.getQuantity());
-                return cart;
+                return getCartDetails(cart.getCustomer().getUserId());
             }
         }
 
@@ -113,8 +116,7 @@ public class CartServiceImplementation implements CartService{
 
         cart.addCartItem(cart_items);
 
-        return cart;
-
+        return getCartDetails(cart.getCustomer().getUserId());
     }
     
     @Override
@@ -132,7 +134,7 @@ public class CartServiceImplementation implements CartService{
     
     @Override
     @Transactional
-    public Orders checkOutCart(OrderAddRequestDto cart){
+    public OrderResponseDto checkOutCart(OrderAddRequestDto cart){
 
         Restaurant restaurant=restaurantRepository.findById(cart.getRestaurantId()).orElseThrow(()-> 
         new ResourceNotFoundException("Restaurant is Not Found"));
@@ -162,7 +164,9 @@ public class CartServiceImplementation implements CartService{
             order.addOrderItem(orderItem);
         }
         
-        return orderRepository.save(order);
+        Orders saved_order = orderRepository.save(order);
+
+        return orderService.getOrderByOrderId(saved_order.getOrderId());
     }
 
     @Override

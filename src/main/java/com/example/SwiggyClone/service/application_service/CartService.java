@@ -4,16 +4,16 @@ import com.example.SwiggyClone.dto.request.CartItemAddRequestDto;
 import com.example.SwiggyClone.dto.request.CartUpdateRequestDto;
 import com.example.SwiggyClone.dto.request.OrderAddRequestDto;
 import com.example.SwiggyClone.dto.response.CartDetailsResponseDto;
-import com.example.SwiggyClone.model.Cart;
-import com.example.SwiggyClone.model.Orders;
+import com.example.SwiggyClone.dto.response.OrderResponseDto;
+
 
 public interface CartService {
     
-    public Cart addItemToCart(CartItemAddRequestDto item);
+    public CartDetailsResponseDto addItemToCart(CartItemAddRequestDto item);
 
-    public Cart updateCartItem(CartUpdateRequestDto item);
+    public CartDetailsResponseDto updateCartItem(CartUpdateRequestDto item);
 
-    public Orders checkOutCart(OrderAddRequestDto order);
+    public OrderResponseDto checkOutCart(OrderAddRequestDto order);
     
     public CartDetailsResponseDto getCartDetails(Long customerId);
 

@@ -32,5 +32,4 @@ public interface OrderRepository extends JpaRepository<Orders,Long> {
 
     @Query("select o from Orders o where o.deliveryId = :deliveryId")
     public Optional<List<Orders>> getAllDeliveryOrder(@Param("deliveryId") Long deliveryId);
-    
 }
