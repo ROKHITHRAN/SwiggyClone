@@ -210,4 +210,27 @@ public class OrderServiceImplementation implements OrderService {
         responseDto.setOrderStatus(updated.getOrderStatus());
         return responseDto;
     }
+
+    public OrderResponseDto getOrderByOrderId(Long orderId)
+    {
+        Orders currentOrder = orderRepository.findById(orderId).orElseThrow(()->  
+        new ResourceNotFoundException("No orders found"));
+        OrderResponseDto responseDto = new OrderResponseDto();
+        responseDto.setAmount(currentOrder.getAmount());
+        responseDto.setOrderId(currentOrder.getOrderId());
+        
+        List<OrderItems> orderItems = currentOrder.getOrderItems();
+        List<OrderItemDto> orderItemsDtos = new ArrayList<>();
+    
+        for(OrderItems item : orderItems)
+        {
+            OrderItemDto orderItemDto = new OrderItemDto();
+            orderItemDto.setFoodItemId(item.getFoodItems().getFoodId());
+            orderItemDto.setQuantity(item.getQuantity());
+            orderItemsDtos.add(orderItemDto);
+        }
+        responseDto.setOrderItems(orderItemsDtos);
+
+        return responseDto;
+    }
 }
