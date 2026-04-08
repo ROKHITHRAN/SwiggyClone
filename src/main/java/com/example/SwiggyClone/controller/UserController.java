@@ -19,7 +19,7 @@ public class UserController {
     @GetMapping("/getDetails")
     public UserDetailsResponseDto getUserDetils(@RequestParam String email)
     {
-        return userService.getUserDetils(email);
+        return userService.getUserDetails(email);
     } 
 
     @PutMapping("/update")
