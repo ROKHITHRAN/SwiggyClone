@@ -1,5 +1,6 @@
 package com.example.SwiggyClone.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -37,6 +38,9 @@ public class Cart {
     private Double amount;
 
     public void addCartItem(CartItems cartItem) {
+        if (cartItems == null) {
+            cartItems = new ArrayList<>();
+        }
         cartItems.add(cartItem);
         cartItem.setCart(this);
     }

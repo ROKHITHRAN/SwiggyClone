@@ -14,6 +14,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CartDetailsResponseDto {
+    private Long cartId;
     private Long restaurantId;
     private Double amount;
     public List<OrderItemDto> cartItems;

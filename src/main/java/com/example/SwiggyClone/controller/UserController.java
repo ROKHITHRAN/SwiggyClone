@@ -11,8 +11,11 @@ import com.example.SwiggyClone.dto.request.UserDetailsEditRequestDto;
 import com.example.SwiggyClone.dto.response.UserDetailsResponseDto;
 import com.example.SwiggyClone.service.application_service.UserService;
 
+import lombok.AllArgsConstructor;
+
 @RestController
 @RequestMapping("/user")
+@AllArgsConstructor
 public class UserController {
     private UserService userService;
 

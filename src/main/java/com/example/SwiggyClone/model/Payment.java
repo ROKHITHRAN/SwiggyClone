@@ -2,7 +2,6 @@ package com.example.SwiggyClone.model;
 
 import com.example.SwiggyClone.enums.PaymentMethod;
 import com.example.SwiggyClone.enums.PaymentStatus;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -39,7 +38,7 @@ public class Payment {
     @OneToOne(mappedBy = "payment",cascade = CascadeType.ALL)
     private Orders orders;
 
-    @ManyToOne
-    @JoinColumn(name="customer_id")
-    private Customer customer;
+    // @ManyToOne
+    // @JoinColumn(name="customer_id")
+    // private Customer customer;
 }

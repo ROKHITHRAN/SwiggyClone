@@ -14,8 +14,11 @@ import com.example.SwiggyClone.dto.response.OrderResponseDto;
 import com.example.SwiggyClone.dto.response.OrderStatusResponseDto;
 import com.example.SwiggyClone.service.application_service.OrderService;
 
+import lombok.AllArgsConstructor;
+
 @RestController
 @RequestMapping("/order")
+@AllArgsConstructor
 public class OrderController {
 
     private OrderService orderservice;

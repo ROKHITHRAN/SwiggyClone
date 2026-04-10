@@ -17,7 +17,10 @@ import com.example.SwiggyClone.dto.response.FoodItemDetailsResponseDto;
 import com.example.SwiggyClone.dto.response.FoodItemUpdateResponseDto;
 import com.example.SwiggyClone.service.application_service.FoodItemsService;
 
+import lombok.AllArgsConstructor;
+
 @RestController
+@AllArgsConstructor
 @RequestMapping("/foodItems")
 public class FoodItemsController {
     private FoodItemsService foodItemsService;

@@ -152,8 +152,10 @@ public class CartServiceImplementation implements CartService{
         order.setDelivery(null);
         order.setOrderStatus(OrderStatus.PLACED);
         order.setPayment(payment);
-         
-        for (OrderItemDto cartItems : cart.getCartItems())
+
+        CartDetailsResponseDto cartItemsRes = getCartDetails(cart.getCustomerId());
+
+        for (OrderItemDto cartItems : cartItemsRes.getCartItems())
         {
             FoodItems food = foodItemRepository.findById(cartItems.getFoodItemId())
                     .orElseThrow(() -> new ResourceNotFoundException("Food Item is Not Found"));
@@ -165,7 +167,7 @@ public class CartServiceImplementation implements CartService{
         }
         
         Orders saved_order = orderRepository.save(order);
-
+        deleteCart(cartItemsRes.getCartId());
         return orderService.getOrderByOrderId(saved_order.getOrderId());
     }
 
@@ -179,6 +181,7 @@ public class CartServiceImplementation implements CartService{
         Cart cart=customer.getCart();
 
         CartDetailsResponseDto cartDetailsResponseDto =new CartDetailsResponseDto();
+        cartDetailsResponseDto.setCartId(cart.getCartId());
         cartDetailsResponseDto.setRestaurantId(cart.getRestaurant().getUserId());
         cartDetailsResponseDto.setAmount(cart.getAmount());
 

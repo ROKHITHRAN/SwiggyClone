@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.SwiggyClone.dto.request.LoginRequestDto;
@@ -38,6 +39,7 @@ public class AuthServiceImplementation implements AuthService{
     private DeliveryRepository deliveryRepository;
     private UserService userService;
     private JwtService jwtService;
+    private PasswordEncoder passwordEncoder;
 
     public UserDetailsResponseDto register(RegisterRequestDto registerRequestDto){
         Optional<User> user=userRepository.findByEmail(registerRequestDto.getEmail());
@@ -46,11 +48,12 @@ public class AuthServiceImplementation implements AuthService{
         }
         User newUser =new User();
         newUser.setEmail(registerRequestDto.getEmail());
-        newUser.setAddress(registerRequestDto.getAddress());
         newUser.setImages(registerRequestDto.getImages());
         newUser.setUserName(registerRequestDto.getName());
         newUser.setPhoneNumber(registerRequestDto.getPhoneNumber());
-
+        newUser.setPassword(passwordEncoder.encode(registerRequestDto.getPassword()));
+        newUser.setAddress(registerRequestDto.getAddress());
+        
         Role role=registerRequestDto.getRole();
         newUser.setRole(role);
 

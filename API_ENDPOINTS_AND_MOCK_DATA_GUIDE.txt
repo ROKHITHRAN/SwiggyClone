@@ -1,0 +1,880 @@
+================================================================================
+SWIGGY CLONE - API ENDPOINTS & MOCK DATA GENERATION GUIDE
+================================================================================
+
+This document provides complete information about all API endpoints, their
+request/response structures, and the mock data needed to test them.
+
+================================================================================
+SECTION 1: API ENDPOINTS OVERVIEW
+================================================================================
+
+Base URL: http://localhost:8080
+
+Total Endpoints: 20
+
+Controllers:
+1. AuthController (/auth) - 2 endpoints
+2. UserController (/user) - 2 endpoints  
+3. FoodItemsController (/foodItems) - 5 endpoints
+4. CartController (/cart) - 5 endpoints
+5. OrderController (/order) - 6 endpoints
+
+
+================================================================================
+SECTION 2: AUTHENTICATION ENDPOINTS
+================================================================================
+
+─────────────────────────────────────────────────────────────────────────────
+1. USER REGISTRATION
+─────────────────────────────────────────────────────────────────────────────
+Endpoint: POST /auth/register
+Description: Register a new user (Customer, Restaurant, or Delivery Partner)
+
+Request Body: RegisterRequestDto
+{
+  "name": "String (REQUIRED)",
+  "email": "String (REQUIRED - unique)",
+  "password": "String (REQUIRED)",
+  "phoneNumber": "String (REQUIRED)",
+  "role": "CUSTOMER | RESTAURANT | DELIVERY_PARTNER (REQUIRED)",
+  "address": {
+    "street": "String (REQUIRED)",
+    "district": "String (REQUIRED)",
+    "state": "String (REQUIRED)",
+    "pinCode": "String (REQUIRED)"
+  },
+  "images": {
+    "imageUrl": "String (OPTIONAL)"
+  },
+  "customerDetails": {
+    "points": "Integer (Optional for CUSTOMER role)",
+    "ratings": "Integer (Optional, 0-5)",
+    "isSubscribed": "Boolean (Optional, default false)"
+  },
+  "restaurantDetails": {
+    "restaurantName": "String (Optional for RESTAURANT role)",
+    "ratings": "Integer (Optional, 0-5)",
+    "description": "String (Optional)",
+    "restaurantStatus": "OPEN | CLOSED | MAINTENANCE (Optional)",
+    "foodType": "VEG | NON_VEG | BOTH (Optional)"
+  },
+  "deliveryPartnerDetails": {
+    "currentLoc": "Blob (Optional for DELIVERY_PARTNER role)",
+    "points": "Integer (Optional)",
+    "ratings": "Integer (Optional, 0-5)"
+  }
+}
+
+Response: UserDetailsResponseDto
+{
+  "userId": "Long (Auto-generated)",
+  "name": "String",
+  "email": "String",
+  "phoneNumber": "String",
+  "address": {...},
+  "images": {...},
+  "customerDetails": {...},
+  "restaurantDetails": {...},
+  "deliveryPartnerDetails": {...}
+}
+
+Mock Data for Registration (CUSTOMER):
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "password123",
+  "phoneNumber": "9876543210",
+  "role": "CUSTOMER",
+  "address": {
+    "street": "123 Main St",
+    "district": "Manhattan",
+    "state": "New York",
+    "pinCode": "10001"
+  },
+  "images": {
+    "imageUrl": "https://example.com/images/john.jpg"
+  },
+  "customerDetails": {
+    "points": 0,
+    "ratings": 0,
+    "isSubscribed": false
+  }
+}
+
+Mock Data for Registration (RESTAURANT):
+{
+  "name": "Pizza Palace",
+  "email": "pizzapalace@example.com",
+  "password": "password123",
+  "phoneNumber": "9876543211",
+  "role": "RESTAURANT",
+  "address": {
+    "street": "456 Food Ave",
+    "district": "Manhattan",
+    "state": "New York",
+    "pinCode": "10002"
+  },
+  "images": {
+    "imageUrl": "https://example.com/images/pizza-palace.jpg"
+  },
+  "restaurantDetails": {
+    "restaurantName": "Pizza Palace",
+    "ratings": 4,
+    "description": "Best pizza in town",
+    "restaurantStatus": "OPEN",
+    "foodType": "NON_VEG"
+  }
+}
+
+Mock Data for Registration (DELIVERY_PARTNER):
+{
+  "name": "Rajesh Kumar",
+  "email": "delivery@example.com",
+  "password": "password123",
+  "phoneNumber": "9876543212",
+  "role": "DELIVERY_PARTNER",
+  "address": {
+    "street": "789 Delivery Lane",
+    "district": "Manhattan",
+    "state": "New York",
+    "pinCode": "10003"
+  },
+  "images": {
+    "imageUrl": "https://example.com/images/delivery.jpg"
+  },
+  "deliveryPartnerDetails": {
+    "points": 100,
+    "ratings": 4
+  }
+}
+
+
+─────────────────────────────────────────────────────────────────────────────
+2. USER LOGIN
+─────────────────────────────────────────────────────────────────────────────
+Endpoint: POST /auth/login
+Description: Login user and receive JWT token
+
+Request Body: LoginRequestDto
+{
+  "email": "String (REQUIRED)",
+  "password": "String (REQUIRED)"
+}
+
+Response: LoginResponseDto
+{
+  "token": "String (JWT token for authentication)"
+}
+
+Mock Data for Login:
+{
+  "email": "john@example.com",
+  "password": "password123"
+}
+
+Expected Response:
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+
+
+================================================================================
+SECTION 3: USER MANAGEMENT ENDPOINTS
+================================================================================
+
+─────────────────────────────────────────────────────────────────────────────
+3. GET USER DETAILS
+─────────────────────────────────────────────────────────────────────────────
+Endpoint: GET /user/getDetails
+Description: Fetch user details by email
+
+Query Parameters:
+- email: String (REQUIRED) - The email of the user
+
+Response: UserDetailsResponseDto
+{
+  "userId": "Long",
+  "name": "String",
+  "email": "String",
+  "phoneNumber": "String",
+  "address": {...},
+  "images": {...},
+  "customerDetails": {...},
+  "restaurantDetails": {...},
+  "deliveryPartnerDetails": {...}
+}
+
+Mock Data:
+GET /user/getDetails?email=john@example.com
+
+
+─────────────────────────────────────────────────────────────────────────────
+4. UPDATE USER DETAILS
+─────────────────────────────────────────────────────────────────────────────
+Endpoint: PUT /user/update
+Description: Update user profile information
+
+Request Body: UserDetailsEditRequestDto
+{
+  "name": "String (Optional)",
+  "email": "String (Optional)",
+  "password": "String (Optional)",
+  "phoneNumber": "String (Optional)",
+  "address": {
+    "street": "String (Optional)",
+    "district": "String (Optional)",
+    "state": "String (Optional)",
+    "pinCode": "String (Optional)"
+  },
+  "images": {
+    "imageUrl": "String (Optional)"
+  },
+  "customerDetails": {
+    "points": "Integer (Optional)",
+    "ratings": "Integer (Optional)",
+    "isSubscribed": "Boolean (Optional)"
+  },
+  "restaurantDetails": {
+    "restaurantName": "String (Optional)",
+    "ratings": "Integer (Optional)",
+    "description": "String (Optional)",
+    "restaurantStatus": "OPEN | CLOSED | MAINTENANCE (Optional)",
+    "foodType": "VEG | NON_VEG | BOTH (Optional)"
+  },
+  "deliveryPartnerDetails": {
+    "currentLoc": "Blob (Optional)",
+    "points": "Integer (Optional)",
+    "ratings": "Integer (Optional)"
+  }
+}
+
+Response: UserDetailsResponseDto (same as GET)
+
+Mock Data for Update:
+{
+  "name": "John Updated",
+  "email": "john@example.com",
+  "phoneNumber": "9876543210",
+  "address": {
+    "street": "123 Updated St",
+    "district": "Manhattan",
+    "state": "New York",
+    "pinCode": "10001"
+  }
+}
+
+
+================================================================================
+SECTION 4: FOOD ITEMS ENDPOINTS
+================================================================================
+
+─────────────────────────────────────────────────────────────────────────────
+5. ADD FOOD ITEM (Restaurant Only)
+─────────────────────────────────────────────────────────────────────────────
+Endpoint: POST /foodItems/add
+Description: Add a new food item to a restaurant
+
+Request Body: FoodItemAddRequestDto
+{
+  "restaurantId": "Long (REQUIRED)",
+  "foodName": "String (REQUIRED)",
+  "ratings": "Integer (REQUIRED, 0-5)",
+  "cost": "Integer (REQUIRED, in smallest currency unit)",
+  "descriptions": "String (Optional)",
+  "foodType": "VEG | NON_VEG | BOTH (REQUIRED)",
+  "foodCategory": "APPETIZERS | MAINS | DESSERTS | BEVERAGES | BREADS | SOUPS | SALADS (REQUIRED)",
+  "isAvailable": "Boolean (REQUIRED, default true)",
+  "imageUrl": "String (Optional)"
+}
+
+Response: FoodItemDetailsResponseDto
+{
+  "foodId": "Long (Auto-generated)",
+  "foodName": "String",
+  "ratings": "Integer",
+  "cost": "Integer",
+  "descriptions": "String",
+  "foodType": "String",
+  "isAvailable": "Boolean",
+  "foodCategory": "String"
+}
+
+Mock Data to Add Food Items:
+
+Menu Item 1:
+{
+  "restaurantId": 1,
+  "foodName": "Margherita Pizza",
+  "ratings": 4,
+  "cost": 399,
+  "descriptions": "Classic pizza with tomato, mozzarella, and basil",
+  "foodType": "VEG",
+  "foodCategory": "MAINS",
+  "isAvailable": true,
+  "imageUrl": "https://example.com/margherita.jpg"
+}
+
+Menu Item 2:
+{
+  "restaurantId": 1,
+  "foodName": "Garlic Bread",
+  "ratings": 5,
+  "cost": 149,
+  "descriptions": "Crispy garlic bread with herbs",
+  "foodType": "VEG",
+  "foodCategory": "APPETIZERS",
+  "isAvailable": true,
+  "imageUrl": "https://example.com/garlic-bread.jpg"
+}
+
+Menu Item 3:
+{
+  "restaurantId": 1,
+  "foodName": "Pepperoni Pizza",
+  "ratings": 4,
+  "cost": 499,
+  "descriptions": "Pizza with pepperoni and cheese",
+  "foodType": "NON_VEG",
+  "foodCategory": "MAINS",
+  "isAvailable": true,
+  "imageUrl": "https://example.com/pepperoni.jpg"
+}
+
+
+─────────────────────────────────────────────────────────────────────────────
+6. GET ALL FOOD ITEMS BY RESTAURANT
+─────────────────────────────────────────────────────────────────────────────
+Endpoint: GET /foodItems/getAllByRest/{restaurantId}
+Description: Get all food items offered by a restaurant
+
+Path Variables:
+- restaurantId: Long (REQUIRED) - Restaurant ID
+
+Response: List<FoodItemDetailsResponseDto>
+[
+  {
+    "foodId": "Long",
+    "foodName": "String",
+    "ratings": "Integer",
+    "cost": "Integer",
+    "descriptions": "String",
+    "foodType": "String",
+    "isAvailable": "Boolean",
+    "foodCategory": "String"
+  },
+  ...
+]
+
+Mock Data:
+GET /foodItems/getAllByRest/1
+
+
+─────────────────────────────────────────────────────────────────────────────
+7. GET FOOD ITEM BY ID
+─────────────────────────────────────────────────────────────────────────────
+Endpoint: GET /foodItems/getById/{foodId}
+Description: Get details of a specific food item
+
+Path Variables:
+- foodId: Long (REQUIRED) - Food item ID
+
+Response: FoodItemDetailsResponseDto
+{
+  "foodId": "Long",
+  "foodName": "String",
+  "ratings": "Integer",
+  "cost": "Integer",
+  "descriptions": "String",
+  "foodType": "String",
+  "isAvailable": "Boolean",
+  "foodCategory": "String"
+}
+
+Mock Data:
+GET /foodItems/getById/1
+
+
+─────────────────────────────────────────────────────────────────────────────
+8. UPDATE FOOD ITEM
+─────────────────────────────────────────────────────────────────────────────
+Endpoint: PUT /foodItems/update
+Description: Update food item details
+
+Request Body: FoodItemUpdateRequestDto
+{
+  "foodItemId": "Long (REQUIRED)",
+  "foodName": "String (Optional)",
+  "ratings": "Integer (Optional)",
+  "cost": "Integer (Optional)",
+  "descriptions": "String (Optional)",
+  "foodType": "VEG | NON_VEG | BOTH (Optional)",
+  "isAvailable": "Boolean (Optional)",
+  "imageUrl": "String (Optional)",
+  "foodCategory": "APPETIZERS | MAINS | DESSERTS | BEVERAGES | BREADS | SOUPS | SALADS (Optional)"
+}
+
+Response: FoodItemUpdateResponseDto
+
+Mock Data:
+{
+  "foodItemId": 1,
+  "foodName": "Premium Margherita Pizza",
+  "ratings": 5,
+  "cost": 449,
+  "descriptions": "Updated description",
+  "foodType": "VEG",
+  "isAvailable": true,
+  "foodCategory": "MAINS"
+}
+
+
+─────────────────────────────────────────────────────────────────────────────
+9. DELETE FOOD ITEM
+─────────────────────────────────────────────────────────────────────────────
+Endpoint: DELETE /foodItems/delete/{foodId}
+Description: Delete a food item from restaurant menu
+
+Path Variables:
+- foodId: Long (REQUIRED) - Food item ID to delete
+
+Response: String (success/error message)
+
+Mock Data:
+DELETE /foodItems/delete/1
+
+
+================================================================================
+SECTION 5: CART ENDPOINTS
+================================================================================
+
+─────────────────────────────────────────────────────────────────────────────
+10. ADD ITEM TO CART
+─────────────────────────────────────────────────────────────────────────────
+Endpoint: POST /cart/addItem
+Description: Add a food item to customer's cart
+
+Request Body: CartItemAddRequestDto
+{
+  "foodItemId": "Long (REQUIRED)",
+  "quantity": "Integer (REQUIRED, > 0)",
+  "restaurantId": "Long (REQUIRED)",
+  "customerId": "Long (REQUIRED)"
+}
+
+Response: CartDetailsResponseDto
+{
+  "restaurantId": "Long",
+  "amount": "Double (total cart value)",
+  "cartItems": [
+    {
+      "foodItemId": "Long",
+      "quantity": "Integer"
+    },
+    ...
+  ]
+}
+
+Mock Data:
+{
+  "foodItemId": 1,
+  "quantity": 2,
+  "restaurantId": 1,
+  "customerId": 1
+}
+
+
+─────────────────────────────────────────────────────────────────────────────
+11. UPDATE CART ITEM
+─────────────────────────────────────────────────────────────────────────────
+Endpoint: PUT /cart/updateItem
+Description: Update quantity of an item in cart
+
+Request Body: CartUpdateRequestDto
+{
+  "cartId": "Long (REQUIRED)",
+  "foodItemId": "Long (REQUIRED)",
+  "quantity": "Integer (REQUIRED, > 0)"
+}
+
+Response: CartDetailsResponseDto
+
+Mock Data:
+{
+  "cartId": 1,
+  "foodItemId": 1,
+  "quantity": 3
+}
+
+
+─────────────────────────────────────────────────────────────────────────────
+12. CHECKOUT CART (Create Order)
+─────────────────────────────────────────────────────────────────────────────
+Endpoint: POST /cart/checkout
+Description: Checkout cart and create an order
+
+Request Body: OrderAddRequestDto
+{
+  "cartItems": [
+    {
+      "foodItemId": "Long (REQUIRED)",
+      "quantity": "Integer (REQUIRED)"
+    },
+    ...
+  ],
+  "amount": "Double (REQUIRED - total amount)",
+  "restaurantId": "Long (REQUIRED)",
+  "customerId": "Long (REQUIRED)",
+  "paymentId": "Long (REQUIRED)"
+}
+
+Response: OrderResponseDto
+{
+  "orderId": "Long (Auto-generated)",
+  "amount": "Double",
+  "orderItems": [
+    {
+      "foodItemId": "Long",
+      "quantity": "Integer"
+    },
+    ...
+  ]
+}
+
+Mock Data:
+{
+  "cartItems": [
+    {
+      "foodItemId": 1,
+      "quantity": 2
+    },
+    {
+      "foodItemId": 2,
+      "quantity": 1
+    }
+  ],
+  "amount": 947.0,
+  "restaurantId": 1,
+  "customerId": 1,
+  "paymentId": 1
+}
+
+
+─────────────────────────────────────────────────────────────────────────────
+13. GET CART DETAILS
+─────────────────────────────────────────────────────────────────────────────
+Endpoint: GET /cart/cartDetails/{customerId}
+Description: Get details of customer's current cart
+
+Path Variables:
+- customerId: Long (REQUIRED)
+
+Response: CartDetailsResponseDto
+{
+  "restaurantId": "Long",
+  "amount": "Double",
+  "cartItems": [
+    {
+      "foodItemId": "Long",
+      "quantity": "Integer"
+    },
+    ...
+  ]
+}
+
+Mock Data:
+GET /cart/cartDetails/1
+
+
+─────────────────────────────────────────────────────────────────────────────
+14. DELETE CART
+─────────────────────────────────────────────────────────────────────────────
+Endpoint: DELETE /cart/deleteCart/{customerId}
+Description: Clear customer's cart
+
+Path Variables:
+- customerId: Long (REQUIRED)
+
+Response: String (success/error message)
+
+Mock Data:
+DELETE /cart/deleteCart/1
+
+
+================================================================================
+SECTION 6: ORDER ENDPOINTS
+================================================================================
+
+─────────────────────────────────────────────────────────────────────────────
+15. GET CUSTOMER'S CURRENT ORDER
+─────────────────────────────────────────────────────────────────────────────
+Endpoint: GET /order/customer/currentOrder/{customerId}
+Description: Get current active order for a customer
+
+Path Variables:
+- customerId: Long (REQUIRED)
+
+Response: OrderResponseDto
+{
+  "orderId": "Long",
+  "amount": "Double",
+  "orderItems": [...]
+}
+
+Mock Data:
+GET /order/customer/currentOrder/1
+
+
+─────────────────────────────────────────────────────────────────────────────
+16. GET RESTAURANT'S CURRENT ORDER
+─────────────────────────────────────────────────────────────────────────────
+Endpoint: GET /order/restaurant/currentOrder/{restaurantId}
+Description: Get current order being prepared at restaurant
+
+Path Variables:
+- restaurantId: Long (REQUIRED)
+
+Response: OrderResponseDto
+
+Mock Data:
+GET /order/restaurant/currentOrder/1
+
+
+─────────────────────────────────────────────────────────────────────────────
+17. GET DELIVERY PARTNER'S CURRENT ORDER
+─────────────────────────────────────────────────────────────────────────────
+Endpoint: GET /order/delivery/currentOrder/{deliveryId}
+Description: Get current delivery assignment for delivery partner
+
+Path Variables:
+- deliveryId: Long (REQUIRED)
+
+Response: OrderResponseDto
+
+Mock Data:
+GET /order/delivery/currentOrder/1
+
+
+─────────────────────────────────────────────────────────────────────────────
+18. GET CUSTOMER ORDER HISTORY
+─────────────────────────────────────────────────────────────────────────────
+Endpoint: GET /order/customer/orderHistory/{customerId}
+Description: Get all past orders for a customer
+
+Path Variables:
+- customerId: Long (REQUIRED)
+
+Response: List<OrderResponseDto>
+[
+  {
+    "orderId": "Long",
+    "amount": "Double",
+    "orderItems": [...]
+  },
+  ...
+]
+
+Mock Data:
+GET /order/customer/orderHistory/1
+
+
+─────────────────────────────────────────────────────────────────────────────
+19. GET RESTAURANT ORDER HISTORY
+─────────────────────────────────────────────────────────────────────────────
+Endpoint: GET /order/restaurant/orderHistory/{restaurantId}
+Description: Get all orders for a restaurant
+
+Path Variables:
+- restaurantId: Long (REQUIRED)
+
+Response: List<OrderResponseDto>
+
+Mock Data:
+GET /order/restaurant/orderHistory/1
+
+
+─────────────────────────────────────────────────────────────────────────────
+20. GET DELIVERY PARTNER ORDER HISTORY
+─────────────────────────────────────────────────────────────────────────────
+Endpoint: GET /order/delivery/orderHistory/{deliveryId}
+Description: Get all delivery assignments for a delivery partner
+
+Path Variables:
+- deliveryId: Long (REQUIRED)
+
+Response: List<OrderResponseDto>
+
+Mock Data:
+GET /order/delivery/orderHistory/1
+
+
+─────────────────────────────────────────────────────────────────────────────
+21. UPDATE ORDER STATUS
+─────────────────────────────────────────────────────────────────────────────
+Endpoint: PUT /order/updateStatus
+Description: Update order status (for restaurant/delivery flow)
+
+Request Body: OrderStatusUpdateRequestDto
+{
+  "orderId": "Long (REQUIRED)",
+  "orderStatus": "PENDING | CONFIRMED | PREPARING | OUT_FOR_DELIVERY | DELIVERED | CANCELLED (REQUIRED)"
+}
+
+Response: OrderStatusResponseDto
+
+Mock Data - Confirm Order:
+{
+  "orderId": 1,
+  "orderStatus": "CONFIRMED"
+}
+
+Mock Data - Preparing:
+{
+  "orderId": 1,
+  "orderStatus": "PREPARING"
+}
+
+Mock Data - Out for Delivery:
+{
+  "orderId": 1,
+  "orderStatus": "OUT_FOR_DELIVERY"
+}
+
+Mock Data - Delivered:
+{
+  "orderId": 1,
+  "orderStatus": "DELIVERED"
+}
+
+Mock Data - Cancel:
+{
+  "orderId": 1,
+  "orderStatus": "CANCELLED"
+}
+
+
+─────────────────────────────────────────────────────────────────────────────
+22. GET ORDER BY ORDER ID
+─────────────────────────────────────────────────────────────────────────────
+Endpoint: GET /order/getOrder/{orderId}
+Description: Get specific order details by order ID
+
+Path Variables:
+- orderId: Long (REQUIRED)
+
+Response: OrderResponseDto
+
+Mock Data:
+GET /order/getOrder/1
+
+
+================================================================================
+SECTION 7: ORDER FLOW - RECOMMENDED SEQUENCE
+================================================================================
+
+To properly test the entire application flow:
+
+STEP 1: CREATE USERS
+   1. Register Customer: POST /auth/register
+   2. Register Restaurant: POST /auth/register
+   3. Register Delivery Partner: POST /auth/register (optional)
+
+STEP 2: CREATE FOOD ITEMS
+   1. Add Food Item 1: POST /foodItems/add
+   2. Add Food Item 2: POST /foodItems/add
+   3. Add Food Item 3: POST /foodItems/add (at least 3 items)
+
+STEP 3: CUSTOMER ORDERING FLOW
+   1. Add Item to Cart: POST /cart/addItem
+   2. Add Another Item: POST /cart/addItem
+   3. Get Cart Details: GET /cart/cartDetails/{customerId}
+   4. Checkout: POST /cart/checkout (requires Payment ID - need to create payment first)
+
+STEP 4: ORDER TRACKING
+   1. Get Customer Current Order: GET /order/customer/currentOrder/{customerId}
+   2. Restaurant confirms order: PUT /order/updateStatus (CONFIRMED)
+   3. Restaurant starts preparing: PUT /order/updateStatus (PREPARING)
+   4. Mark as ready: PUT /order/updateStatus (OUT_FOR_DELIVERY)
+   5. Delivery complete: PUT /order/updateStatus (DELIVERED)
+
+STEP 5: HISTORY & REPORTS
+   1. Get Customer Order History: GET /order/customer/orderHistory/{customerId}
+   2. Get Restaurant Order History: GET /order/restaurant/orderHistory/{restaurantId}
+   3. Get Delivery Order History: GET /order/delivery/orderHistory/{deliveryId}
+
+
+================================================================================
+SECTION 8: TESTING CHECKLIST
+================================================================================
+
+AUTHENTICATION:
+[] Register as Customer
+[] Register as Restaurant
+[] Register as Delivery Partner
+[] Login with Customer credentials
+[] Login with Restaurant credentials
+
+FOOD ITEMS:
+[] Add food item as Restaurant
+[] Get all food items for restaurant
+[] Get specific food item by ID
+[] Update food item
+[] Delete food item
+
+CART OPERATIONS:
+[] Add item to cart
+[] Update item quantity in cart
+[] Get cart details
+[] Clear cart
+
+ORDER MANAGEMENT:
+[] Checkout from cart (creates order)
+[] Get customer current order
+[] Get restaurant current order
+[] Update order status (full lifecycle)
+[] Get order history (customer, restaurant, delivery)
+
+USER MANAGEMENT:
+[] Get user details by email
+[] Update user profile
+
+
+================================================================================
+SECTION 9: IMPORTANT NOTES FOR MOCK DATA
+================================================================================
+
+1. USER CREATION:
+   - Always create users with unique emails
+   - Use proper role assignments (CUSTOMER, RESTAURANT, DELIVERY_PARTNER)
+   - Store the returned userId for subsequent API calls
+
+2. FOOD ITEMS:
+   - Cost is in smallest currency unit (e.g., 399 = 3.99)
+   - foodType must match or be compatible with restaurant's foodType
+   - isAvailable must be true for items to be orderable
+   - Ensure at least 3 food items exist for testing
+
+3. CART OPERATIONS:
+   - customerId must match a registered CUSTOMER
+   - restaurantId must match a registered RESTAURANT
+   - foodItemId must exist in the restaurant's menu
+   - All items in a single cart must be from the same restaurant
+
+4. ORDERS:
+   - cartItems array must contain valid foodItemId and quantity > 0
+   - amount should equal sum of (foodItem.cost * quantity)
+   - restaurantId and customerId must be valid
+   - paymentId must exist before checkout
+
+5. ORDER STATUS:
+   - Follow natural flow: PENDING → CONFIRMED → PREPARING → OUT_FOR_DELIVERY → DELIVERED
+   - Only CANCELLED can come at any stage
+
+6. ADDRESS & IMAGES:
+   - Optional fields but recommended for user profile completeness
+   - ImageUrl should be a valid URL for proper display
+
+
+================================================================================
+END OF DOCUMENT
+================================================================================

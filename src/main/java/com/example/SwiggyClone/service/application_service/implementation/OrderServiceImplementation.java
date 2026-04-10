@@ -25,18 +25,18 @@ public class OrderServiceImplementation implements OrderService {
 
     private OrderRepository orderRepository;
 
-    List<OrderStatus> activeStatuses = List.of(
+    private static final List<OrderStatus> activeStatuses = List.of(
         OrderStatus.PLACED,
         OrderStatus.CONFIRMED,
         OrderStatus.PREPARING,
         OrderStatus.OUT_FOR_DELIVERY
     );
-    List<OrderStatus> restActiveStatuses = List.of(
+    private static final List<OrderStatus> restActiveStatuses = List.of(
         OrderStatus.PLACED,
         OrderStatus.CONFIRMED,
         OrderStatus.PREPARING
     );
-    List<OrderStatus> deliveryActiveStatuses = List.of(
+    private static final List<OrderStatus> deliveryActiveStatuses = List.of(
         OrderStatus.CONFIRMED,
         OrderStatus.PREPARING,
         OrderStatus.OUT_FOR_DELIVERY

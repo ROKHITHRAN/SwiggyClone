@@ -1,9 +1,9 @@
 package com.example.SwiggyClone.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.example.SwiggyClone.enums.OrderStatus;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -56,6 +56,10 @@ public class Orders {
     private Payment payment;
 
     public void addOrderItem(OrderItems orderItem) {
+        if(orderItems==null)
+        {
+            orderItems = new ArrayList<>();
+        }
         orderItems.add(orderItem);
         orderItem.setOrders(this);
     }

@@ -10,6 +10,8 @@ import com.example.SwiggyClone.dto.response.CartDetailsResponseDto;
 import com.example.SwiggyClone.dto.response.OrderResponseDto;
 import com.example.SwiggyClone.service.application_service.CartService;
 
+import lombok.AllArgsConstructor;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/cart")
+@AllArgsConstructor
 public class CartController {
     private CartService cartService;
 

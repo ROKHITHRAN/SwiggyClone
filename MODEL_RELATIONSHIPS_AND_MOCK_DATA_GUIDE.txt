@@ -1,0 +1,544 @@
+================================================================================
+SWIGGY CLONE - DATABASE MODELS RELATIONSHIPS & MOCK DATA GENERATION GUIDE
+================================================================================
+
+IMPORTANT NOTES FOR MOCK DATA GENERATION:
+- Users must be created first (base entity)
+- Then create specific user types (Customer, Restaurant, Delivery)
+- Then create dependent entities in order of relationships
+- Use consistent IDs for relationships with @MapsId relationships
+- Enum values must match the defined enums exactly
+
+================================================================================
+1. ENUM VALUES REFERENCE
+================================================================================
+
+Role: CUSTOMER, RESTAURANT, DELIVERY_PARTNER
+
+OrderStatus: PENDING, CONFIRMED, PREPARING, OUT_FOR_DELIVERY, DELIVERED, CANCELLED
+
+FoodType: VEG, NON_VEG, BOTH
+
+FoodCategory: APPETIZERS, MAINS, DESSERTS, BEVERAGES, BREADS, SOUPS, SALADS
+
+RestaurantStatus: OPEN, CLOSED, MAINTENANCE
+
+PaymentStatus: PENDING, SUCCESSFUL, FAILED, CANCELLED
+
+PaymentMethod: CREDIT_CARD, DEBIT_CARD, UPI, WALLET, CASH_ON_DELIVERY
+
+
+================================================================================
+2. ENTITY DETAILS WITH REQUIRED FIELDS
+================================================================================
+
+─────────────────────────────────────────────────────────────────────────────
+USERS (Base Entity - Must Create First)
+─────────────────────────────────────────────────────────────────────────────
+Primary Key: userId (Long - Auto Generated)
+
+Fields:
+  - userId: Long (Auto Generated)
+  - userName: String (REQUIRED - unique identifier)
+  - email: String (REQUIRED - unique)
+  - phoneNumber: String (REQUIRED)
+  - password: String (REQUIRED)
+  - role: Role Enum (REQUIRED - CUSTOMER/RESTAURANT/DELIVERY_PARTNER)
+
+Relationships:
+  - ONE-TO-ONE: Address (one-sided, mappedBy with cascade)
+  - ONE-TO-ONE: Images (one-sided, mappedBy with cascade)
+
+Mock Data Requirements:
+  - Minimum 1 User per role
+  - Username must be unique
+  - Email must be unique and valid format
+  - Password should be encoded in real application
+  - Phone number should follow valid pattern
+
+Example Username Pattern: user_[role]_[number], e.g., user_customer_1, user_restaurant_1
+
+
+─────────────────────────────────────────────────────────────────────────────
+CUSTOMER
+─────────────────────────────────────────────────────────────────────────────
+Primary Key: userId (Long - Foreign Key to User)
+
+Fields:
+  - userId: Long (REQUIRED - @MapsId from User)
+  - user: User (REQUIRED - OneToOne relationship)
+  - isSubscribed: Boolean (REQUIRED - default false)
+  - points: Integer (REQUIRED - default 0)
+  - ratings: Integer (REQUIRED - default 0, range 0-5)
+
+Relationships:
+  - ONE-TO-ONE: User (Parent)
+  - ONE-TO-ONE: Cart (one-sided, mappedBy with cascade)
+  - ONE-TO-MANY: Orders (one-sided, mappedBy)
+  - ONE-TO-MANY: Payment (via ManyToOne in Payment)
+
+Dependency:
+  - Must have corresponding User with role=CUSTOMER
+  - userId must match User.userId
+
+Mock Data Requirements:
+  - isSubscribed: randomly true/false
+  - points: 0-1000
+  - ratings: 0-5
+
+
+─────────────────────────────────────────────────────────────────────────────
+RESTAURANT
+─────────────────────────────────────────────────────────────────────────────
+Primary Key: userId (Long - Foreign Key to User)
+
+Fields:
+  - userId: Long (REQUIRED - @MapsId from User)
+  - user: User (REQUIRED - OneToOne relationship)
+  - restName: String (REQUIRED)
+  - ratings: Integer (REQUIRED - default 0, range 0-5)
+  - description: String (OPTIONAL)
+  - restaurantStatus: RestaurantStatus Enum (REQUIRED)
+  - foodType: FoodType Enum (REQUIRED - VEG/NON_VEG/BOTH)
+
+Relationships:
+  - ONE-TO-ONE: User (Parent)
+  - ONE-TO-MANY: FoodItems (one-sided, mappedBy with cascade & orphanRemoval)
+  - ONE-TO-MANY: Orders (one-sided, mappedBy with cascade)
+
+Dependency:
+  - Must have corresponding User with role=RESTAURANT
+  - userId must match User.userId
+
+Mock Data Requirements:
+  - restName: unique restaurant names
+  - ratings: 0-5
+  - description: restaurant description
+  - restaurantStatus: OPEN or CLOSED
+  - foodType: VEG, NON_VEG, or BOTH
+
+
+─────────────────────────────────────────────────────────────────────────────
+DELIVERY (Delivery Partner)
+─────────────────────────────────────────────────────────────────────────────
+Primary Key: userId (Long - Foreign Key to User)
+
+Fields:
+  - userId: Long (REQUIRED - @MapsId from User)
+  - user: User (REQUIRED - OneToOne relationship)
+  - currentLoc: Blob (REQUIRED - location data)
+  - points: Integer (REQUIRED - default 0)
+  - ratings: Integer (REQUIRED - default 0, range 0-5)
+
+Relationships:
+  - ONE-TO-ONE: User (Parent)
+  - ONE-TO-MANY: Orders (one-sided, mappedBy)
+
+Dependency:
+  - Must have corresponding User with role=DELIVERY_PARTNER
+  - userId must match User.userId
+
+Mock Data Requirements:
+  - currentLoc: latitude,longitude as Blob
+  - points: 0-1000
+  - ratings: 0-5
+
+
+─────────────────────────────────────────────────────────────────────────────
+ADDRESS
+─────────────────────────────────────────────────────────────────────────────
+Primary Key: addressId (Long - Auto Generated)
+
+Fields:
+  - addressId: Long (Auto Generated)
+  - street: String (REQUIRED)
+  - district: String (REQUIRED)
+  - state: String (REQUIRED)
+  - pinCode: String (REQUIRED - valid postal code)
+  - user: User (Foreign Key - nullable in some cases)
+
+Relationships:
+  - ONE-TO-ONE: User (inverse relationship, @JsonBackReference)
+
+Dependency:
+  - Associated with a User
+  - One Address per User
+
+Mock Data Requirements:
+  - street: valid street address
+  - district: valid district name
+  - state: valid state/province
+  - pinCode: valid postal code format
+
+
+─────────────────────────────────────────────────────────────────────────────
+IMAGES
+─────────────────────────────────────────────────────────────────────────────
+Primary Key: imageId (Long - Auto Generated)
+
+Fields:
+  - imageId: Long (Auto Generated)
+  - imageUrl: String (REQUIRED - valid URL)
+  - user: User (Foreign Key)
+
+Relationships:
+  - ONE-TO-ONE: User
+
+Dependency:
+  - Associated with a User
+  - One Image per User (ideally)
+
+Mock Data Requirements:
+  - imageUrl: valid image URL or placeholder
+  - Example: "https://example.com/images/user_[userId].jpg"
+
+
+─────────────────────────────────────────────────────────────────────────────
+CART
+─────────────────────────────────────────────────────────────────────────────
+Primary Key: cartId (Long - Auto Generated)
+
+Fields:
+  - cartId: Long (Auto Generated)
+  - restaurant: Restaurant (REQUIRED - Foreign Key)
+  - customer: Customer (REQUIRED - Foreign Key)
+  - amount: Double (REQUIRED - total cart value)
+  - cartItems: List<CartItems> (REQUIRED - cascade, orphanRemoval)
+
+Relationships:
+  - ONE-TO-ONE: Restaurant
+  - ONE-TO-ONE: Customer (inverse relationship, mappedBy)
+  - ONE-TO-MANY: CartItems (one-sided, cascade all, orphanRemoval)
+
+Dependency:
+  - Must have valid Restaurant and Customer references
+  - Customer can have only ONE Cart at a time
+  - All CartItems must belong to the same Restaurant as Cart
+
+Mock Data Requirements:
+  - One Cart per Customer
+  - amount: calculated from CartItems (sum of food_cost * quantity)
+  - restaurant: must correspond to Customer's selected restaurant
+
+
+─────────────────────────────────────────────────────────────────────────────
+CARTITEMS
+─────────────────────────────────────────────────────────────────────────────
+Primary Key: cartItemId (Long - Auto Generated)
+
+Fields:
+  - cartItemId: Long (Auto Generated)
+  - foodItems: FoodItems (REQUIRED - Foreign Key)
+  - cart: Cart (REQUIRED - Foreign Key, ManyToOne)
+  - quantity: Integer (REQUIRED - must be > 0)
+
+Relationships:
+  - MANY-TO-ONE: FoodItems
+  - MANY-TO-ONE: Cart (inverse relationship, mappedBy)
+
+Dependency:
+  - Must have valid FoodItems reference
+  - Must have valid Cart reference
+  - FoodItems must exist and be available (isAvailable = true)
+  - All CartItems in a Cart must reference same Restaurant
+
+Mock Data Requirements:
+  - quantity: 1-10
+  - foodItems: from FoodItems table
+  - cart: from Cart table
+  - FoodItems.isAvailable must be true
+
+
+─────────────────────────────────────────────────────────────────────────────
+FOODITEMS
+─────────────────────────────────────────────────────────────────────────────
+Primary Key: foodId (Long - Auto Generated)
+
+Fields:
+  - foodId: Long (Auto Generated)
+  - foodName: String (REQUIRED)
+  - ratings: Integer (REQUIRED - 0-5)
+  - cost: Integer (REQUIRED - in paise/smallest currency unit)
+  - descriptions: String (OPTIONAL)
+  - foodType: FoodType Enum (REQUIRED)
+  - isAvailable: Boolean (REQUIRED - default true)
+  - foodCategory: FoodCategory Enum (REQUIRED)
+  - imageUrl: String (OPTIONAL - image URL)
+  - restaurant: Restaurant (REQUIRED - Foreign Key)
+
+Relationships:
+  - MANY-TO-ONE: Restaurant (inverse relationship, mappedBy)
+  - ONE-TO-MANY: OrderItems (one-sided, mappedBy)
+  - ONE-TO-MANY: CartItems (via ManyToOne in CartItems)
+
+Dependency:
+  - Must have valid Restaurant reference
+  - Multiple FoodItems can belong to same Restaurant
+
+Mock Data Requirements:
+  - foodName: unique per restaurant
+  - ratings: 0-5
+  - cost: positive integer (e.g., 99 = 0.99 units)
+  - foodType: must match Restaurant.foodType or be compatible
+  - isAvailable: true/false
+  - foodCategory: APPETIZERS, MAINS, DESSERTS, BEVERAGES, BREADS, SOUPS, SALADS
+  - imageUrl: valid food image URL
+
+
+─────────────────────────────────────────────────────────────────────────────
+ORDERS
+─────────────────────────────────────────────────────────────────────────────
+Primary Key: orderId (Long - Auto Generated)
+
+Fields:
+  - orderId: Long (Auto Generated)
+  - amount: Double (REQUIRED - total order amount)
+  - orderStatus: OrderStatus Enum (REQUIRED)
+  - restaurant: Restaurant (REQUIRED - Foreign Key)
+  - customer: Customer (REQUIRED - Foreign Key)
+  - delivery: Delivery (OPTIONAL - Foreign Key, nullable)
+  - payment: Payment (REQUIRED - OneToOne relationship)
+  - orderItems: List<OrderItems> (REQUIRED - cascade all)
+
+Relationships:
+  - MANY-TO-ONE: Restaurant
+  - MANY-TO-ONE: Customer
+  - MANY-TO-ONE: Delivery (nullable)
+  - ONE-TO-ONE: Payment (inverse relationship, mappedBy)
+  - ONE-TO-MANY: OrderItems (one-sided, cascade all)
+
+Dependency:
+  - Must have valid Customer and Restaurant
+  - Must have corresponding Payment
+  - Delivery can be null (nullable) or valid Delivery reference
+  - One Order to Multiple OrderItems
+
+Mock Data Requirements:
+  - amount: calculated from OrderItems (sum of food_cost * quantity)
+  - orderStatus: PENDING, CONFIRMED, PREPARING, OUT_FOR_DELIVERY, DELIVERED, CANCELLED
+  - Assign delivery partner when status = OUT_FOR_DELIVERY or DELIVERED
+  - Customer must exist
+  - Restaurant must exist and be OPEN
+
+
+─────────────────────────────────────────────────────────────────────────────
+ORDERITEMS
+─────────────────────────────────────────────────────────────────────────────
+Primary Key: orderItemId (Long - Auto Generated)
+
+Fields:
+  - orderItemId: Long (Auto Generated)
+  - foodItems: FoodItems (REQUIRED - Foreign Key)
+  - orders: Orders (REQUIRED - Foreign Key, ManyToOne)
+  - quantity: Integer (REQUIRED - must be > 0)
+
+Relationships:
+  - MANY-TO-ONE: FoodItems
+  - MANY-TO-ONE: Orders (inverse relationship, mappedBy)
+
+Dependency:
+  - Must have valid FoodItems reference
+  - Must have valid Orders reference
+  - Multiple OrderItems can belong to same Order
+
+Mock Data Requirements:
+  - quantity: 1-10
+  - foodItems: from FoodItems table (from ordered Restaurant)
+  - orders: from Orders table
+  - FoodItems must be from same Restaurant as Order
+
+
+─────────────────────────────────────────────────────────────────────────────
+PAYMENT
+─────────────────────────────────────────────────────────────────────────────
+Primary Key: paymentId (Long - Auto Generated)
+
+Fields:
+  - paymentId: Long (Auto Generated)
+  - paymentStatus: PaymentStatus Enum (REQUIRED)
+  - paymentMethod: PaymentMethod Enum (REQUIRED)
+  - amount: Double (REQUIRED - must equal Order amount)
+  - orders: Orders (ONE-TO-ONE - inverse relationship)
+  - customer: Customer (REQUIRED - Foreign Key)
+
+Relationships:
+  - ONE-TO-ONE: Orders (inverse relationship, mappedBy)
+  - MANY-TO-ONE: Customer
+
+Dependency:
+  - Must have valid Customer reference
+  - Must have corresponding Order
+  - One Payment per Order
+  - amount must equal Order.amount
+
+Mock Data Requirements:
+  - paymentStatus: PENDING, SUCCESSFUL, FAILED, CANCELLED
+  - paymentMethod: CREDIT_CARD, DEBIT_CARD, UPI, WALLET, CASH_ON_DELIVERY
+  - amount: matches Order.amount
+  - customer: same as Order.customer
+
+
+================================================================================
+3. CREATION ORDER FOR MOCK DATA
+================================================================================
+
+Follow this order to avoid foreign key constraint violations:
+
+1. USER (Create at least):
+   - 1 User with role=CUSTOMER
+   - 1 User with role=RESTAURANT
+   - 1 User with role=DELIVERY_PARTNER
+
+2. CUSTOMER (Use Customer User)
+   - Create Customer from User(role=CUSTOMER)
+
+3. RESTAURANT (Use Restaurant User)
+   - Create Restaurant from User(role=RESTAURANT)
+
+4. DELIVERY (Use Delivery User)
+   - Create Delivery from User(role=DELIVERY_PARTNER)
+
+5. ADDRESS (Link to any User)
+   - Create Address and link to User
+
+6. IMAGES (Link to any User)
+   - Create Images and link to User
+
+7. FOODITEMS (Link to Restaurant)
+   - Create FoodItems with valid Restaurant reference
+
+8. CART (Link to Customer and Restaurant)
+   - Create Cart with valid Customer and Restaurant
+
+9. CARTITEMS (Link to Cart and FoodItems)
+   - Create CartItems with valid Cart and FoodItems
+
+10. ORDERS (Link to Customer, Restaurant, and optional Delivery)
+    - Create Orders with valid Customer and Restaurant
+    - Leave Delivery as null initially or assign later
+
+11. ORDERITEMS (Link to Orders and FoodItems)
+    - Create OrderItems with valid Orders and FoodItems (from same Restaurant)
+
+12. PAYMENT (Link to Orders and Customer)
+    - Create Payment with valid Orders and Customer
+
+
+================================================================================
+4. RELATIONSHIP DIAGRAM (Text Format)
+================================================================================
+
+USER (Base)
+├── CUSTOMER (OneToOne @MapsId)
+│   ├── CART (OneToOne)
+│   │   └── CARTITEMS (OneToMany)
+│   │       └── FOODITEMS (ManyToOne)
+│   ├── ORDERS (OneToMany)
+│   │   ├── ORDERITEMS (OneToMany)
+│   │   │   └── FOODITEMS (ManyToOne)
+│   │   ├── PAYMENT (OneToOne)
+│   │   ├── RESTAURANT (ManyToOne)
+│   │   └── DELIVERY (ManyToOne, nullable)
+│   └── PAYMENT (OneToMany via ManyToOne)
+│
+├── RESTAURANT (OneToOne @MapsId)
+│   ├── FOODITEMS (OneToMany)
+│   ├── ORDERS (OneToMany)
+│   │   ├── ORDERITEMS (OneToMany)
+│   │   ├── PAYMENT (OneToOne)
+│   │   ├── CUSTOMER (ManyToOne)
+│   │   └── DELIVERY (ManyToOne, nullable)
+│   └── CART (OneToOne)
+│
+├── DELIVERY (OneToOne @MapsId)
+│   └── ORDERS (OneToMany)
+│
+├── ADDRESS (OneToOne)
+│
+└── IMAGES (OneToOne)
+
+
+FOODITEMS
+├── RESTAURANT (ManyToOne)
+├── CARTITEMS (OneToMany via ManyToOne)
+└── ORDERITEMS (OneToMany via ManyToOne)
+
+
+PAYMENT
+├── ORDERS (OneToOne)
+└── CUSTOMER (ManyToOne)
+
+
+================================================================================
+5. CONSTRAINTS & VALIDATIONS FOR MOCK DATA
+================================================================================
+
+UNIQUE CONSTRAINTS:
+- User.email: Must be globally unique
+- User.userName: Must be globally unique
+- FoodItems.foodName per Restaurant: Unique within each restaurant
+
+NULLABLE FIELDS:
+- Orders.delivery: nullable (not assigned until delivery starts)
+- FoodItems.descriptions: nullable
+- FoodItems.imageUrl: nullable
+- Address.user: can be null initially
+- Images.user: can be null initially
+- Delivery.orders: can be empty list
+
+NON-NULLABLE FIELDS:
+- All @Id fields (auto-generated)
+- User: userName, email, phoneNumber, password, role
+- Customer: user, isSubscribed, points, ratings
+- Restaurant: user, restName, ratings, restaurantStatus, foodType
+- Delivery: user, currentLoc, points, ratings
+- FoodItems: foodName, ratings, cost, foodType, isAvailable, foodCategory, restaurant
+- Cart: restaurant, customer, amount
+- CartItems: foodItems, cart, quantity
+- Orders: amount, orderStatus, restaurant, customer, payment
+- OrderItems: foodItems, orders, quantity
+- Payment: paymentStatus, paymentMethod, amount, customer
+
+RANGE VALIDATIONS:
+- *ratings: 0-5
+- *quantity: > 0
+- cost/amount: > 0
+- points: >= 0
+
+
+================================================================================
+6. RELATIONSHIPS SUMMARY TABLE
+================================================================================
+
+Entity              | Related To          | Type        | Mappings
+────────────────────────────────────────────────────────────────────────────
+User                | Customer            | OneToOne    | @MapsId
+User                | Restaurant          | OneToOne    | @MapsId
+User                | Delivery            | OneToOne    | @MapsId
+User                | Address             | OneToOne    | mappedBy + cascade
+User                | Images              | OneToOne    | mappedBy + cascade
+Customer            | Cart                | OneToOne    | mappedBy + cascade
+Customer            | Orders              | OneToMany   | mappedBy
+Customer            | Payment             | OneToMany   | ManyToOne in Payment
+Restaurant          | FoodItems           | OneToMany   | mappedBy + cascade + orphanRemoval
+Restaurant          | Orders              | OneToMany   | mappedBy + cascade
+FoodItems           | CartItems           | OneToMany   | ManyToOne in CartItems
+FoodItems           | OrderItems          | OneToMany   | mappedBy
+Cart                | CartItems           | OneToMany   | mappedBy + cascade + orphanRemoval
+CartItems           | FoodItems           | ManyToOne   | Foreign Key
+CartItems           | Cart                | ManyToOne   | mappedBy
+Orders              | OrderItems          | OneToMany   | mappedBy + cascade
+Orders              | Payment             | OneToOne    | mappedBy
+Orders              | Restaurant          | ManyToOne   | Foreign Key
+Orders              | Customer            | ManyToOne   | Foreign Key
+Orders              | Delivery            | ManyToOne   | Foreign Key (nullable)
+OrderItems          | FoodItems           | ManyToOne   | Foreign Key
+OrderItems          | Orders              | ManyToOne   | mappedBy
+Payment             | Orders              | OneToOne    | mappedBy + cascade
+Payment             | Customer            | ManyToOne   | Foreign Key
+Delivery            | Orders              | OneToMany   | mappedBy
+
+
+================================================================================
+END OF DOCUMENT
+================================================================================

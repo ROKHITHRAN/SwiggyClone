@@ -58,6 +58,7 @@ public class FoodItemsServiceImplementation implements FoodItemsService {
 
        for(FoodItems item : foodItems){
           FoodItemDetailsResponseDto dto=new FoodItemDetailsResponseDto();
+          dto.setFoodId(item.getFoodId());
           dto.setCost(item.getCost());
           dto.setDescriptions(item.getDescriptions());
           dto.setFoodCategory(item.getFoodCategory());
@@ -75,6 +76,7 @@ public class FoodItemsServiceImplementation implements FoodItemsService {
         FoodItemDetailsResponseDto dto=new FoodItemDetailsResponseDto();
         FoodItems item=foodItemRepository.findById(foodId).orElseThrow(()->
         new ResourceNotFoundException("FoodItem Not Found"));
+        dto.setFoodId(item.getFoodId());
         dto.setCost(item.getCost());
         dto.setDescriptions(item.getDescriptions());
         dto.setFoodCategory(item.getFoodCategory());
@@ -123,6 +125,7 @@ public class FoodItemsServiceImplementation implements FoodItemsService {
         FoodItems updatedItem = foodItemRepository.save(item);
 
         FoodItemUpdateResponseDto dto = new FoodItemUpdateResponseDto();
+        dto.setFoodItemId(updatedItem.getFoodId());
         dto.setCost(updatedItem.getCost());
         dto.setDescriptions(updatedItem.getDescriptions());
         dto.setFoodCategory(updatedItem.getFoodCategory());

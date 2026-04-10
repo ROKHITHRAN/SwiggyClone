@@ -1,6 +1,5 @@
 package com.example.SwiggyClone.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -39,8 +38,4 @@ public class Address {
         this.pinCode = pinCode;
     }
 
-    @OneToOne
-    @JsonBackReference
-    @JoinColumn(name="user_id")
-    private User user;
 }

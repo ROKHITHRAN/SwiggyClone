@@ -7,15 +7,17 @@ import com.example.SwiggyClone.dto.request.LoginRequestDto;
 import com.example.SwiggyClone.dto.request.RegisterRequestDto;
 import com.example.SwiggyClone.dto.response.LoginResponseDto;
 import com.example.SwiggyClone.dto.response.UserDetailsResponseDto;
-import com.example.SwiggyClone.exception.DuplicateEntityException;
-import com.example.SwiggyClone.service.application_service.UserService;
+
 import com.example.SwiggyClone.service.security_service.AuthService;
+
+import lombok.AllArgsConstructor;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/auth")
 public class AuthController {
 

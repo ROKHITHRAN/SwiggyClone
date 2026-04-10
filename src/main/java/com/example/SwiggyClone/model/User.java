@@ -1,6 +1,7 @@
 package com.example.SwiggyClone.model;
 
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 
 import com.example.SwiggyClone.enums.Role;
@@ -32,12 +33,13 @@ public class User {
 
     private String password;
 
-    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
-    @JsonManagedReference
+    
+    @OneToOne(cascade = CascadeType.ALL,orphanRemoval = true)
+    @JoinColumn(name="address_id")
     private Address address;
 
-    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
-    @JsonManagedReference
+    @OneToOne(cascade = CascadeType.ALL,orphanRemoval = true)
+    @JoinColumn(name="image_id")
     private Images images;
 
     @Enumerated(EnumType.STRING)
